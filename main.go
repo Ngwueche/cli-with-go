@@ -1,18 +1,17 @@
 package main
 
-import (
-	"log"
+import "github.com/Ngwueche/cli-with-go.git/internal/pokeapi"
 
-	"github.com/Ngwueche/cli-with-go.git/internal/pokeapi"
-)
+type config struct {
+	pokeapiClient           pokeapi.Client
+	nextLocationAreaUrl     *string
+	previousLocationAreaUrl *string
+}
 
 func main() {
-	pokeapiClient := pokeapi.NewClient()
-	resp, err := pokeapiClient.GetLocationAreaList()
-	if err != nil {
-		log.Fatalf("Error getting location area list: %v", err)
+	cfg := config{
+		pokeapiClient: pokeapi.NewClient(),
 	}
-	log.Printf("Location Areas: %+v", resp)
-	//StartRepl()
+	StartRepl(&cfg)
 
 }

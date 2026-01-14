@@ -7,10 +7,13 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetLocationAreaList() (LocationAreaResponse, error) {
+func (c *Client) GetLocationAreaList(pageUrl *string) (LocationAreaResponse, error) {
 	endpoint := "location-area/"
 	fullUrl := pokeBaseURL + endpoint
-
+	
+	if pageUrl != nil {
+		fullUrl = *pageUrl
+	}
 	req, error := http.NewRequest("GET", fullUrl, nil)
 	if error != nil {
 		return LocationAreaResponse{}, error
