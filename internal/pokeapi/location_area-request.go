@@ -10,10 +10,22 @@ import (
 func (c *Client) GetLocationAreaList(pageUrl *string) (LocationAreaResponse, error) {
 	endpoint := "location-area/"
 	fullUrl := pokeBaseURL + endpoint
-	
+
 	if pageUrl != nil {
 		fullUrl = *pageUrl
 	}
+	//check the cache
+	dat, ok := c.cache.Get(fullUrl)
+	if ok {
+		fmt.Println("Cache hit for", fullUrl)
+		locationAreaResponse := LocationAreaResponse{}
+		err := json.Unmarshal(dat, &locationAreaResponse)
+		if err != nil {
+			return LocationAreaResponse{}, err
+		}
+		return locationAreaResponse, nil
+	}
+	fmt.Println("Cache miss for", fullUrl)
 	req, error := http.NewRequest("GET", fullUrl, nil)
 	if error != nil {
 		return LocationAreaResponse{}, error
@@ -40,6 +52,6 @@ func (c *Client) GetLocationAreaList(pageUrl *string) (LocationAreaResponse, err
 	if err != nil {
 		return LocationAreaResponse{}, err
 	}
-	
+	c.cache.Add(fullUrl, data)
 	return locationAreaResponse, nil
 }

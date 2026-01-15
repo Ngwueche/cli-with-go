@@ -1,4 +1,4 @@
-package pokacache
+package pokecache
 
 import "time"
 
@@ -11,11 +11,15 @@ type cacheEntry struct {
 	createdAt time.Time
 }
 
-func NewCache() *Cache {
-	return &Cache{
+func NewCache( interval time.Duration) *Cache {
+	c := &Cache{
 		cache: make(map[string]cacheEntry),
 	}
+	go c.loopReap(interval)
+
+	return c
 }
+
 
 func (c *Cache) Get(key string) ([]byte, bool) {
 	entry, exists := c.cache[key]
@@ -40,4 +44,22 @@ func (c *Cache) Clear(key string) (data []byte) {
 		return nil
 	}
 	return entry.data
+}
+
+func (c *Cache) loopReap(interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	for range ticker.C{
+		c.reap(interval)
+	}
+}
+
+
+func(c *Cache) reap(interval time.Duration) {
+	// implement cache expiration logic if needed
+	expiryTime:= time.Now().UTC().Add(-interval)
+	for key, value := range c.cache {
+		if value.createdAt.Before(expiryTime) {
+			delete(c.cache, key)
+		}
+	}
 }
