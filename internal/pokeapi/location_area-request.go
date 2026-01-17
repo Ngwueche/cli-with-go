@@ -55,3 +55,50 @@ func (c *Client) GetLocationAreaList(pageUrl *string) (LocationAreaResponse, err
 	c.cache.Add(fullUrl, data)
 	return locationAreaResponse, nil
 }
+
+func (c *Client) GetLocationArea(locationAreaName string) (LocationArea, error) {
+	endpoint := "location/" + locationAreaName
+	fullUrl := pokeBaseURL + endpoint
+
+	
+	//check the cache
+	dat, ok := c.cache.Get(fullUrl)
+	if ok {
+		fmt.Println("Cache hit for", fullUrl)
+		locationArea := LocationArea{}
+		err := json.Unmarshal(dat, &locationArea)
+		if err != nil {
+			return LocationArea{}, err
+		}
+		return locationArea, nil
+	}
+	fmt.Println("Cache miss for", fullUrl)
+	req, error := http.NewRequest("GET", fullUrl, nil)
+	if error != nil {
+		return LocationArea{}, error
+	}
+
+	res, error := c.httpClient.Do(req)
+	if error != nil {
+		return LocationArea{}, error
+	}
+
+	defer res.Body.Close()
+
+	if res.StatusCode > 399 {
+		return LocationArea{}, fmt.Errorf("Bad status code: %v", res.StatusCode)
+	}
+
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		return LocationArea{}, err
+	}
+
+	locationArea := LocationArea{}
+	err = json.Unmarshal(data, &locationArea)
+	if err != nil {
+		return LocationArea{}, err
+	}
+	c.cache.Add(fullUrl, data)
+	return locationArea, nil
+}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func callbackMap(cfg *config) error {
+func callbackMap(cfg *config, args ...string) error {
 	resp, err := cfg.pokeapiClient.GetLocationAreaList(cfg.nextLocationAreaUrl)
 	if err != nil {
 		return fmt.Errorf("Error getting location area list: %v", err)
@@ -17,7 +17,7 @@ func callbackMap(cfg *config) error {
 	cfg.previousLocationAreaUrl = resp.Previous
 	return nil
 }
-func callbackMapb(cfg *config) error {
+func callbackMapb(cfg *config, args ...string) error {
 	if cfg.previousLocationAreaUrl == nil {
 		fmt.Println("No previous page available.")
 		return nil

@@ -10,6 +10,12 @@ type config struct {
 	pokeapiClient           pokeapi.Client
 	nextLocationAreaUrl     *string
 	previousLocationAreaUrl *string
+	areaName                *string
+}
+
+type exploreConfig struct {
+	pokeapiClient pokeapi.Client
+	areaName      *string
 }
 
 func main() {
