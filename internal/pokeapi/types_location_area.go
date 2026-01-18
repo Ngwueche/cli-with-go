@@ -1,15 +1,19 @@
 package pokeapi
 
+// LocationAreaResponse matches the JSON shape from the list endpoint.
+// Struct tags like `json:"count"` map JSON field names to Go fields.
 type LocationAreaResponse struct {
 	Count    int     `json:"count"`
 	Next     *string `json:"next"`
 	Previous *string `json:"previous"`
+	// Results uses anonymous structs for inline definitions.
 	Results  []struct {
 		Name string `json:"name"`
 		URL  string `json:"url"`
 	} `json:"results"`
 }
 
+// LocationArea matches the JSON for a single location area detail response.
 type LocationArea struct {
 	EncounterMethodRates []struct {
 		EncounterMethod struct {

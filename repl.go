@@ -7,7 +7,10 @@ import (
 	"strings"
 )
 
+// StartRepl runs a basic read-eval-print loop (REPL) that reads stdin,
+// parses a command, and dispatches to a callback.
 func StartRepl(cfg *config) {
+	// NewScanner reads input line-by-line from os.Stdin.
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print(" >")
@@ -17,20 +20,25 @@ func StartRepl(cfg *config) {
 		if len(cleaned) == 0 {
 			continue
 		}
+		// Slice indexing to get the command name (first word).
 		commandName := cleaned[0]
+		// Empty slice literal; will hold remaining words as args.
 		args := []string{}
 		if len(cleaned) > 0 {
-			args = cleaned[1:] //indexing from 1 to get the rest of the words as args
+			// Slicing syntax: [1:] means "from index 1 to the end".
+			args = cleaned[1:]
 		}
 
 		availableCommands := getCommands()
 
+		// Map lookup with "comma ok" to see if the key exists.
 		command, ok := availableCommands[commandName]
 		if !ok {
 			fmt.Println("invalid command")
 			continue
 		}
 
+		// Variadic call: args... expands the slice into individual arguments.
 		err := command.callback(cfg, args...)
 		if err != nil {
 			fmt.Printf("Error executing command: %v\n", err)
@@ -41,10 +49,13 @@ func StartRepl(cfg *config) {
 type cliCommand struct {
 	name        string
 	description string
+	// Function type field; callback takes *config and a variadic list of args.
 	callback    func(cfg *config, args ...string) error
 }
 
+// getCommands builds the command registry as a map of name -> metadata.
 func getCommands() map[string]cliCommand {
+	// Composite literal for map[string]cliCommand with inline struct literals.
 	return map[string]cliCommand{
 		"help": {
 			name:        "help",
@@ -88,9 +99,12 @@ func getCommands() map[string]cliCommand {
 		},
 	}
 }
+// cleanInput normalizes user input into lowercase tokens.
 func cleanInput(str string) []string {
 
+	// strings.ToLower returns a new string; original is unchanged (strings are immutable).
 	lowered := strings.ToLower(str)
+	// strings.Fields splits on any whitespace and collapses multiple spaces.
 	words := strings.Fields(lowered)
 	return words
 

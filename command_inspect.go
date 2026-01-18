@@ -5,12 +5,14 @@ import (
 	"fmt"
 )
 
+// callbackInspect prints details for a pokemon the user has already caught.
 func callbackInspect(cfg *config, args ...string) error {
 	if len(args) < 1 {
 		return errors.New("Please provide a pokemon name.")
 	}
 	pokemonName := args[0]
 
+	// Map lookup with "comma ok" to detect missing entries.
 	pokemon, ok := cfg.caughtPokemons[pokemonName]
 	if !ok {
 		return fmt.Errorf("You have not caught a pokemon named %s yet.", pokemonName)
@@ -25,6 +27,7 @@ func callbackInspect(cfg *config, args ...string) error {
 	//fmt.Printf("Moves: %v\n", pokemon.Moves)
 
 	fmt.Printf("Stats")
+	// Range over a slice of structs.
 	for _, stat := range pokemon.Stats {
 		fmt.Printf("- %s: %v \n", stat.Stat.Name, stat.BaseStat)
 	}

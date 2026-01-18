@@ -7,14 +7,16 @@ import (
 	"net/http"
 )
 
+// GetPokemonList fetches a paginated list of pokemon.
 func (c *Client) GetPokemonList(pageUrl *string) (PokemonList, error) {
 	endpoint := "pokemon/"
 	fullUrl := pokeBaseURL + endpoint
 
+	// If a page URL is provided, use it instead of the default endpoint.
 	if pageUrl != nil {
 		fullUrl = *pageUrl
 	}
-	//check the cache
+	// Check the cache before doing a network call.
 	dat, ok := c.cache.Get(fullUrl)
 	if ok {
 		fmt.Println("Cache hit for", fullUrl)
@@ -56,12 +58,13 @@ func (c *Client) GetPokemonList(pageUrl *string) (PokemonList, error) {
 	return pokemonListResponse, nil
 }
 
+// GetPokemon fetches full details for a single pokemon by name.
 func (c *Client) GetPokemon(pokemonName string) (Pokemon, error) {
 	endpoint := "pokemon/" + pokemonName
 	fullUrl := pokeBaseURL + endpoint
 
 	
-	//check the cache
+	// Check the cache before doing a network call.
 	dat, ok := c.cache.Get(fullUrl)
 	if ok {
 		fmt.Println("Cache hit for", fullUrl)

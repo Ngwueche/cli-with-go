@@ -1,5 +1,7 @@
 package pokeapi
 
+// Pokemon mirrors the PokeAPI JSON response for a pokemon.
+// Many nested fields use anonymous structs to avoid extra type names.
 type Pokemon struct {
 	Abilities []struct {
 		Ability struct {
@@ -26,6 +28,7 @@ type Pokemon struct {
 		} `json:"version"`
 	} `json:"game_indices"`
 	Height                 int           `json:"height"`
+	// interface{} is the empty interface (can hold any type).
 	HeldItems              []interface{} `json:"held_items"`
 	ID                     int           `json:"id"`
 	IsDefault              bool          `json:"is_default"`
@@ -280,6 +283,7 @@ type Pokemon struct {
 	Weight int `json:"weight"`
 }
 
+// PokemonList represents the response from the list endpoint.
 type PokemonList struct {
 	Count    int         `json:"count"`
 	Next     string      `json:"next"`

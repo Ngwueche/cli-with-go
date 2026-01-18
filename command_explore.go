@@ -5,7 +5,9 @@ import (
 	"fmt"
 )
 
+// callbackExplore shows pokemon encounters for a given location area.
 func callbackExplore(cfg *config, arg ...string) error {
+	// len(arg) checks how many arguments were passed to the variadic parameter.
 	if len(arg)  < 1 {
 		return errors.New("Please provide an area name to explore")	
 	}
