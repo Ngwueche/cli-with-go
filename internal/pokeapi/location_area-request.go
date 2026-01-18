@@ -57,10 +57,9 @@ func (c *Client) GetLocationAreaList(pageUrl *string) (LocationAreaResponse, err
 }
 
 func (c *Client) GetLocationArea(locationAreaName string) (LocationArea, error) {
-	endpoint := "location/" + locationAreaName
+	endpoint := "location-area/" + locationAreaName
 	fullUrl := pokeBaseURL + endpoint
 
-	
 	//check the cache
 	dat, ok := c.cache.Get(fullUrl)
 	if ok {

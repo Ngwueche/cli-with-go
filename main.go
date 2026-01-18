@@ -10,7 +10,7 @@ type config struct {
 	pokeapiClient           pokeapi.Client
 	nextLocationAreaUrl     *string
 	previousLocationAreaUrl *string
-	areaName                *string
+	caughtPokemons          map[string]pokeapi.Pokemon
 }
 
 type exploreConfig struct {
@@ -21,6 +21,7 @@ type exploreConfig struct {
 func main() {
 	cfg := config{
 		pokeapiClient: pokeapi.NewClient(time.Hour),
+		caughtPokemons: make(map[string]pokeapi.Pokemon),
 	}
 	StartRepl(&cfg)
 
